@@ -1,0 +1,462 @@
+<!--
+# JobTread Frontend Exercise
+
+The goal of this exercise is to create a live health check dashboard for the
+JobTread API. The dashboard should show the API version and a bar chart of the
+last 10 response times (in milliseconds) of simple GET requests to
+https://api.jobtread.com/healthz, updated every second.
+
+For example (not to scale):
+
+          JobTread API Version abc123
+
+               ---- ---- ----      ----
+     ----      ---- ---- ---- ---- ----      ----
+---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+22.1 23.3 22.2 25.3 26.7 26.5 23.9 26.3 22.2 23.3
+
+Requirements:
+- Render your root component to the `root` <div> provided below.
+- No external CSS or JavaScript should be imported besides the React and
+  ReactDOM libraries already included below.
+- Include all of your CSS and JavaScript in this file in the <style> and
+  <script> tags below.
+- The entirety of the completed exercise should be contained in this file.
+- The dashboard should run correctly in the latest version of Chrome when served
+  from the file protocol. Other browsers do not need to be tested for this
+  exercise.
+- The dashboard should be responsive to different screen widths.
+- Feel free to present the data in additional ways as well, if you choose.
+- Your submission will be evaluated on both visual design and code quality.
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset='utf-8'>
+    <title>JobTread Frontend Exercise</title>
+</head>
+
+<body>
+    <script src='https://unpkg.com/react@18/umd/react.development.js' crossorigin></script>
+    <script src='https://unpkg.com/react-dom@18/umd/react-dom.development.js' crossorigin></script>
+
+    <div id='root'></div>
+  
+    <style>
+
+*{
+
+list-style: none;
+margin: 0;
+font-family: 'Courier New', Courier, monospace;
+}
+
+body{
+
+    background-color: #333;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    height: 70vh;
+}
+#root{
+    height: inherit;
+    width: 80%;
+}
+.container-header{
+  color: white;
+  z-index: -1;
+  margin-left:5%;
+
+}
+.container{
+    position: relative;
+    width: 80%;
+    height: 100%;   
+    border-top: none;
+    border-right: none;
+    margin-top: 100px;
+    z-index: 0;
+}
+
+
+
+@media only screen and (max-width: 600px) {
+    body {
+     height: 70vh;
+    }
+
+    .bar{
+        width: 15px;
+        height: 75%;
+        background-color: #328036;
+        position: absolute;
+        left: -9%;
+        bottom: -3px;
+        z-index: 1000;
+        margin: 0 40px;
+    }
+  
+
+    .v-meter{
+        position: relative;
+        top: 0px;
+        left: 0px;
+        height: 100%;
+        z-index: 100;
+        width: 100%;
+    
+    }
+    .v-meter li div {
+        font-size: 11px;
+        left: -100px;
+    }
+    .v-meter li{
+        left: -30px;
+    }
+    .container {
+        position: relative;
+        width: 80%;
+        height: 30%;
+        background-color: #9c82820c;
+        border-top: none;
+        border-right: none;
+        margin-top: 10px;
+        z-index: 0;
+    }
+
+.bar-2{
+    left:1%;
+    height:75%;
+}
+.bar-3{
+    left:10%;
+    height:75%;
+}
+
+.bar-4{
+    left:20%;
+    height:75%;
+}
+.bar-5{
+    left:30%;
+    height:75%;
+}
+.bar-6{
+    left:40%;
+    height:75%;
+}
+.bar-7{
+    left:50%;
+    height:75%;
+}
+.bar-8{
+
+    left:60%;
+    height:75%;
+}
+
+.bar-9{
+    left:70%;
+    height:75%;
+}
+.bar-10{
+    left:80%;
+    height:75%;
+}
+
+  } 
+  
+
+  .v-meter{
+      position: relative;
+      top: 0px;
+      left: -30px;
+      height: 100%;
+      z-index: 100;
+      width: 100%;
+  }
+  
+  .v-meter li{
+      position: relative;
+      left: -11px;
+      height:20%;
+      border-bottom: solid 1px #1785a7;
+  }
+  
+  .v-meter li::before{
+      content: '';
+      position: absolute;
+      top: -15px;
+      left: -30px;
+      height: 100%;
+      border-bottom: solid 1px #1785a7;
+      transform: skewY(45deg);
+      width: 30px;
+  }
+  
+  .v-meter li div{
+      position: absolute;
+      width: 80px;
+      font-size: 16px;
+      left: -115px;
+      color: #fff;
+      text-align: right;
+  }
+  
+  .bar{
+      width: 20px;
+      height: 75%;
+      background-color: #328036;
+      position: absolute;
+      left: 0%;
+      bottom: -24px;
+      margin: 0 40px;
+  }
+
+  li.last-graph-li{
+
+      border-bottom: 0;
+
+  }
+
+  li.last-graph-li::before{
+
+      content: '';
+      border-bottom: 0;
+
+  }
+  
+  .bar-2{
+      left:10%;
+      height:75%;
+  }
+  .bar-3{
+      left:20%;
+      height:75%;
+  }
+  
+  .bar-4{
+      left:30%;
+      height:75%;
+  }
+  .bar-5{
+      left:40%;
+      height:75%;
+  }
+  .bar-6{
+      left:50%;
+      height:75%;
+  }
+  .bar-7{
+      left:60%;
+      height:75%;
+  }
+  .bar-8{
+  
+      left:70%;
+      height:75%;
+  }
+  
+  .bar-9{
+      left:80%;
+      height:75%;
+  }
+  .bar-10{
+      left:90%;
+      height:75%;
+  }
+  
+.x-axis {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between; /* Adjust spacing between axis labels */
+}
+
+.x-axis li {
+  width: 10%; /* Adjust the width based on your design preferences */
+  text-align: center;
+  font-size: 14px; /* Adjust font size as needed */
+  color: white; /* Adjust color as needed */
+}
+
+/* @media only screen and (min-width: 1000px) {
+  
+} */
+    </style>
+
+    <script>
+      const { useState, useEffect } = React;
+
+  const HealthCheckDashboard = () => {
+    const [version, setVersion] = useState('');
+    const [responseTimes, setResponseTimes] = useState([]);
+    const [mobileRes,setMobileRes]=useState(false)
+    const [maxResponseTime]=useState(400)
+
+    const fetchData = async () => {
+      // call to api
+      try {
+        var start = window.performance.now();
+        // api call
+        const response = await fetch('https://api.jobtread.com/healthz');
+
+      const data = await response.json();
+      const end= window.performance.now();
+        data.responseTime = end-start
+        if(data.version==null){
+          setVersion(undefined)
+        }
+        else{
+        setVersion(data.version);
+        }
+
+        setResponseTimes(prevTimes => [...prevTimes, data.responseTime].slice(-10));
+        } catch (error) {
+          setResponseTimes(prevTimes => [...prevTimes, -100].slice(-10));
+        console.error('Error fetching data:', error);
+      }
+    };
+
+
+    const createXAxis = () => {
+ 
+        return React.createElement('ul', { key: 'x-axis', className: 'x-axis' },
+          Array.from({ length: 10 }, (_, i) => React.createElement('li', { key: `x-axis-${i + 1}` }, i + 1))
+        );
+      };
+
+    const createVerticalMeter = () => {
+        return React.createElement('ul', { key: 'v-meter', className: 'v-meter' },
+          React.createElement('li', null, React.createElement('div', null, '480ms')),
+          React.createElement('li', null, React.createElement('div', null, '400ms')),
+          React.createElement('li', null, React.createElement('div', null, '320ms')),
+          React.createElement('li', null, React.createElement('div', null, '240ms')),
+          React.createElement('li', null, React.createElement('div', null, '160s')),
+          React.createElement('li', { className: 'last-graph-li' }, React.createElement('div', null, '80ms'))
+        );
+      };
+
+    const createandUpdateBars = () => {
+        const bars = [];
+        if(mobileRes){
+        for (let i = 0; i < responseTimes.length; i++) {
+            const percentage = (responseTimes[i] / maxResponseTime) * 100;
+            // console.log("bar height")
+            // console.log(percentage)
+            if(percentage>10){
+            const barHeight = `${percentage}%`;
+          
+            bars.push(
+              React.createElement('div', {
+                key: i + 1,
+                className: `bar bar-${i + 1}`,
+                style: { height: barHeight,bottom:-45}
+              })
+            );
+
+            }
+            else{
+              bars.push(
+                React.createElement('div', {
+                  key: i + 1,
+                  className: `bar bar-${i + 1}`,
+                  style: { height: "80%",bottom:-25,backgroundColor:'red'}
+                })
+              );
+            }
+
+          }
+          return bars
+        }
+        else{
+          for (let i = 0; i < responseTimes.length; i++) {
+            const percentage = (responseTimes[i] / maxResponseTime) * 100;
+            // console.log("bar height")
+            // console.log(percentage)
+            if(percentage>10){
+            const barHeight = `${percentage}%`;
+        
+            bars.push(
+              React.createElement('div', {
+                key: i + 1,
+                className: `bar bar-${i + 1}`,
+                style: { height: barHeight,bottom:-24}
+              })
+            );
+          }
+          else{
+            bars.push(
+              React.createElement('div', {
+                key: i + 1,
+                className: `bar bar-${i + 1}`,
+                style: { height: "80%",bottom:-24,backgroundColor:'red'}
+              })
+            );
+
+          }
+      
+        }
+             
+
+          return bars
+        
+
+      
+      }
+    }
+    
+
+
+    useEffect(() => {
+      fetchData();
+      const interval = setInterval(fetchData, 1000);
+      () => clearInterval(interval);
+
+    }, []);
+
+    useEffect(()=>{
+        console.log(responseTimes)
+        // update the graph
+        createandUpdateBars()
+        if(window.screen.width<1025){
+          setMobileRes(true)
+        }
+        else{
+          setMobileRes(false)
+
+        }
+     
+    
+    },[responseTimes,mobileRes])
+
+
+    const Header =()=>{
+
+    }
+
+    return React.createElement('div', { className: 'container' },
+    React.createElement('h3', {className:'container-header'}, `JobTread API Version ${version}`),
+    createandUpdateBars(),
+    createVerticalMeter(),
+    createXAxis()
+      );
+  };
+
+  // Using ReactDOM.createRoot to render the component
+  const reactRoot = ReactDOM.createRoot(document.getElementById('root'));
+  reactRoot.render(React.createElement(HealthCheckDashboard));
+      </script>
+    
+</body>
+
+</html>
